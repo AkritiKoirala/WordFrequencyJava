@@ -1,48 +1,52 @@
 import java.io.*;
+import java.util.Arrays;
+import java.util.Scanner;
 
 public class WordFrequency {
-    public static void main(String[] args) throws IOException, IOException {
-        File file = new File("C:\\Users\\Desktop\\1.txt");
-        FileInputStream fileStream = new FileInputStream(file);
-        InputStreamReader input = new InputStreamReader(fileStream);
-        BufferedReader reader = new BufferedReader(input);
 
-        String line;
-
-        // Initializing counters
-        int countWord = 0;
-        int sentenceCount = 0;
-        int characterCount = 0;
-        int paragraphCount = 1;
-        int whitespaceCount = 0;
-
-        // Reading line by line from the
-        // file until a null is returned
-        while((line = reader.readLine()) != null)
+    static int countOccurrences(String [] a, String word)
+    {
+        int count = 0;
+        for (int i = 0; i < a.length; i++)
         {
-            if(line.equals(""))
-            {
-                paragraphCount++;
-            } else {
-                characterCount += line.length();
-
-                // \\s+ is the space delimiter in java
-                String[] wordList = line.split("\\s+");
-
-                countWord += wordList.length;
-                whitespaceCount += countWord -1;
-
-                // [!?.:]+ is the sentence delimiter in java
-                String[] sentenceList = line.split("[!?.:]+");
-
-                sentenceCount += sentenceList.length;
-            }
+            // if match found increase count
+            if (word.equals(a[i]))
+                count++;
         }
 
-        System.out.println("Total word count = " + countWord);
-        System.out.println("Total number of sentences = " + sentenceCount);
-        System.out.println("Total number of characters = " + characterCount);
-        System.out.println("Number of paragraphs = " + paragraphCount);
-        System.out.println("Total number of whitespaces = " + whitespaceCount);
+        return count;
     }
-}
+    public static void main(String[] args) throws IOException, IOException {
+
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        Scanner sc= new Scanner(System.in);
+        System.out.println("Please Enter the Filename : \n");
+        String fileName= sc.nextLine(); //reads string.
+        InputStream seedFile = classloader.getResourceAsStream(fileName);
+        InputStreamReader seedinput = new InputStreamReader(seedFile);
+        BufferedReader seedreader = new BufferedReader(seedinput);
+        String seedline;
+        while((seedline = seedreader.readLine()) != null)
+        {
+            System.out.println(seedline);
+            InputStream file = classloader.getResourceAsStream(seedline);
+            InputStreamReader input = new InputStreamReader(file);
+            BufferedReader reader = new BufferedReader(input);
+            String line;
+            while((line=reader.readLine())!=null)
+            {
+                    String[] wordList = line.split("\\s+");
+                    System.out.println(Arrays.toString(wordList));
+                    for(int idx=0;idx<wordList.length;idx++)
+                    {
+                        int countOccur= countOccurrences(wordList,wordList[idx]);
+                        System.out.println(wordList[idx]+" : "+countOccur);
+                    }
+                }
+            }
+        System.out.println("Program has been terminated");
+
+        }
+
+    }
+
